@@ -111,14 +111,14 @@ def generate_points(k):
     cur_color = "red"
 
     correct_counter = 0
-    point_class_count = 10
+    point_class_count = 5000
 
     for i in range(point_class_count):
         for j in range(4):
             if cur_color == "red":
                 while True:
-                    x = random.randint(-5000, 500)
-                    y = random.randint(-5000, 500)
+                    x = random.randint(-5000, 500 - 1)
+                    y = random.randint(-5000 + 1, 500 - 1)
 
                     if pointArray[-y + 5000][x + 5000] == "":
                         break
@@ -130,8 +130,8 @@ def generate_points(k):
                 cur_color = "green"
             elif cur_color == "green":
                 while True:
-                    x = random.randint(-500, 5000)
-                    y = random.randint(-5000, 500)
+                    x = random.randint(-5000, 5000 - 1)
+                    y = random.randint(-5000 + 1, 500 - 1)
 
                     if pointArray[-y + 5000][x + 5000] == "":
                         break
@@ -143,8 +143,8 @@ def generate_points(k):
                 cur_color = "blue"
             elif cur_color == "blue":
                 while True:
-                    x = random.randint(-5000, 500)
-                    y = random.randint(-500, 5000)
+                    x = random.randint(-5000, 500 - 1)
+                    y = random.randint(-500 + 1, 5000)
 
                     if pointArray[-y + 5000][x + 5000] == "":
                         break
@@ -156,8 +156,8 @@ def generate_points(k):
                 cur_color = "purple"
             else:
                 while True:
-                    x = random.randint(-500, 5000)
-                    y = random.randint(-500, 5000)
+                    x = random.randint(-500 + 1, 5000 - 1)
+                    y = random.randint(-500 + 1, 5000)
 
                     if pointArray[-y + 5000][x + 5000] == "":
                         break
