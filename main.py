@@ -2,6 +2,7 @@ import tkinter
 import math
 import random
 import time
+from datetime import datetime
 
 
 class Point:
@@ -48,14 +49,98 @@ def remove_point(point):
 def update_canvas():
     pointCanvas.delete("all")
 
-    for y in range(len(pointArray)):
-        for x in range(len(pointArray[y])):
-            if pointArray[y][x] != "":
-                pointCanvas.create_oval(round(x / 20) - 5, round(y / 20) - 5,
-                                        round(x/20) + 5, round(y/20) + 5, fill=pointArray[y][x])
+    # add all points to canvas
+    for point in points:
+        pointCanvas.create_oval(round((point.x + 5000) / 20) - 5, round((-point.y + 5000) / 20) - 5,
+                                round((point.x + 5000) / 20) + 5, round((-point.y + 5000) / 20) + 5, fill=point.color)
 
+    # add x and y axis
     pointCanvas.create_line(0, 250, 500, 250)
     pointCanvas.create_line(250, 0, 250, 500)
+
+
+def update_canvas_fill_all():
+    pointCanvas.delete("all")
+
+    for x in range(500):
+        for y in range(500):
+            # initialize color counters
+            red_counter = 0
+            blue_counter = 0
+            green_counter = 0
+            purple_counter = 0
+
+            # count all colors
+            for i in range(20):
+                for j in range(20):
+                    cur_color = pointArray[y*20 + j][x*20 + i]
+
+                    if cur_color == "red":
+                        red_counter += 1
+                    elif cur_color == "blue":
+                        blue_counter += 1
+                    elif cur_color == "green":
+                        green_counter += 1
+                    elif cur_color == "purple":
+                        purple_counter += 1
+
+            # get most frequent colors
+            max_counter = 0
+            max_colors = []
+
+            if max_counter < red_counter:
+                max_counter = red_counter
+                max_colors.clear()
+                max_colors.append("red")
+            elif max_counter == red_counter:
+                max_colors.append("red")
+
+            if max_counter < blue_counter:
+                max_counter = blue_counter
+                max_colors.clear()
+                max_colors.append("blue")
+            elif max_counter == blue_counter:
+                max_colors.append("blue")
+
+            if max_counter < green_counter:
+                max_counter = green_counter
+                max_colors.clear()
+                max_colors.append("green")
+            elif max_counter == green_counter:
+                max_colors.append("green")
+
+            if max_counter < purple_counter:
+                max_counter = purple_counter
+                max_colors.clear()
+                max_colors.append("purple")
+            elif max_counter == purple_counter:
+                max_colors.append("purple")
+
+            # if no color was found classify imaginary point in center of the area
+            if max_counter == 0:
+                real_x = x*20 + 10 - 5000
+                real_y = -(y*20 + 10 - 5000)
+                max_color = classify(real_x, real_y, 1)
+            # get random color from prevailing colors
+            else:
+                random.seed(datetime.now())
+                random_index = random.randrange(len(max_colors))
+                max_color = max_colors[random_index]
+
+            pointCanvas.create_rectangle(x, y, x + 1, y + 1, fill=max_color, outline=max_color)
+
+    # add x and y axis
+    pointCanvas.create_line(0, 250, 500, 250)
+    pointCanvas.create_line(250, 0, 250, 500)
+
+
+def canvas_test():
+    for x in range(500):
+        for y in range(500):
+            if x < 250:
+                pointCanvas.create_rectangle(x, y, x + 1, y + 1, fill="red", outline="red")
+            else:
+                pointCanvas.create_rectangle(x, y, x + 1, y + 1, fill="green", outline="green")
 
 
 def reset():
@@ -66,45 +151,73 @@ def reset():
 def experiment1():
     start_time = time.time()
 
+    print("EXPERIMENT 1:")
+
+    # reset point lists if there is more points than initial points
     if len(points) > 20:
         init_points()
+
+    print("Generujú sa body...")
     generate_points(1)
-    update_canvas()
+
+    print("Prebieha vizualizácia...")
+    update_canvas_fill_all()
 
     print("Experiment 1 trval " + str(time.time() - start_time) + " sekúnd.")
+    print()
 
 
 def experiment2():
     start_time = time.time()
 
+    print("EXPERIMENT 2:")
+
+    # reset point lists if there is more points than initial points
     if len(points) > 20:
         init_points()
+
+    print("Generujú sa body...")
     generate_points(3)
-    update_canvas()
+
+    print("Prebieha vizualizácia...")
+    update_canvas_fill_all()
 
     print("Experiment 2 trval " + str(time.time() - start_time) + " sekúnd.")
+    print()
 
 
 def experiment3():
     start_time = time.time()
 
+    # reset point lists if there is more points than initial points
     if len(points) > 20:
         init_points()
+
+    print("Generujú sa body...")
     generate_points(7)
-    update_canvas()
+
+    print("Prebieha vizualizácia...")
+    update_canvas_fill_all()
 
     print("Experiment 3 trval " + str(time.time() - start_time) + " sekúnd.")
+    print()
 
 
 def experiment4():
     start_time = time.time()
 
+    # reset point lists if there is more points than initial points
     if len(points) > 20:
         init_points()
+
+    print("Generujú sa body...")
     generate_points(15)
-    update_canvas()
+
+    print("Prebieha vizualizácia...")
+    update_canvas_fill_all()
 
     print("Experiment 4 trval " + str(time.time() - start_time) + " sekúnd.")
+    print()
 
 
 def generate_points(k):
@@ -113,8 +226,8 @@ def generate_points(k):
     correct_counter = 0
     point_class_count = 5000
 
-    for i in range(point_class_count):
-        for j in range(4):
+    for _ in range(point_class_count):
+        for _ in range(4):
             if cur_color == "red":
                 while True:
                     x = random.randint(-5000, 500 - 1)
@@ -196,47 +309,48 @@ def classify(x, y, k):
     green_counter = 0
     purple_counter = 0
 
-    max_counter = 0
-    max_colors = []
-
     # calculate prevailing neighbour color
     for neighbour in neighbours:
         if neighbour.color == "red":
             red_counter += 1
-
-            if max_counter < red_counter:
-                max_counter = red_counter
-                max_colors.clear()
-                max_colors.append("red")
-            elif max_counter == red_counter:
-                max_colors.append("red")
         elif neighbour.color == "blue":
             blue_counter += 1
-
-            if max_counter < blue_counter:
-                max_counter = blue_counter
-                max_colors.clear()
-                max_colors.append("blue")
-            elif max_counter == blue_counter:
-                max_colors.append("blue")
         elif neighbour.color == "green":
             green_counter += 1
-
-            if max_counter < green_counter:
-                max_counter = green_counter
-                max_colors.clear()
-                max_colors.append("green")
-            elif max_counter == green_counter:
-                max_colors.append("green")
         elif neighbour.color == "purple":
             purple_counter += 1
 
-            if max_counter < purple_counter:
-                max_counter = purple_counter
-                max_colors.clear()
-                max_colors.append("purple")
-            elif max_counter == purple_counter:
-                max_colors.append("purple")
+    # get most frequent colors
+    max_counter = 0
+    max_colors = []
+
+    if max_counter < red_counter:
+        max_counter = red_counter
+        max_colors.clear()
+        max_colors.append("red")
+    elif max_counter == red_counter:
+        max_colors.append("red")
+
+    if max_counter < blue_counter:
+        max_counter = blue_counter
+        max_colors.clear()
+        max_colors.append("blue")
+    elif max_counter == blue_counter:
+        max_colors.append("blue")
+
+    if max_counter < green_counter:
+        max_counter = green_counter
+        max_colors.clear()
+        max_colors.append("green")
+    elif max_counter == green_counter:
+        max_colors.append("green")
+
+    if max_counter < purple_counter:
+        max_counter = purple_counter
+        max_colors.clear()
+        max_colors.append("purple")
+    elif max_counter == purple_counter:
+        max_colors.append("purple")
 
     # get random color from prevailing colors
     random_index = random.randrange(len(max_colors))
@@ -268,12 +382,7 @@ experiment3Btn.grid(row=0, column=3, padx=10, pady=5)
 experiment4Btn = tkinter.Button(buttonFrame, text="Experiment 4", command=experiment4)
 experiment4Btn.grid(row=0, column=4, padx=10, pady=5)
 
-pointArray = []
-for i in range(10000):
-    pointArray.append([])
-
-    for j in range(10000):
-        pointArray[i].append("")
+pointArray = [["" for _ in range(10000)] for _ in range(10000)]
 
 points = []
 
