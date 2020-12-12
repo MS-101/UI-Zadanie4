@@ -59,6 +59,7 @@ def update_canvas():
     pointCanvas.create_line(250, 0, 250, 500)
 
 
+# unused, it takes too long to fill everything...
 def update_canvas_fill_all():
     pointCanvas.delete("all")
 
@@ -161,7 +162,7 @@ def experiment1():
     generate_points(1)
 
     print("Prebieha vizualizácia...")
-    update_canvas_fill_all()
+    update_canvas()
 
     print("Experiment 1 trval " + str(time.time() - start_time) + " sekúnd.")
     print()
@@ -180,7 +181,7 @@ def experiment2():
     generate_points(3)
 
     print("Prebieha vizualizácia...")
-    update_canvas_fill_all()
+    update_canvas()
 
     print("Experiment 2 trval " + str(time.time() - start_time) + " sekúnd.")
     print()
@@ -188,6 +189,8 @@ def experiment2():
 
 def experiment3():
     start_time = time.time()
+
+    print("EXPERIMENT 3:")
 
     # reset point lists if there is more points than initial points
     if len(points) > 20:
@@ -197,7 +200,7 @@ def experiment3():
     generate_points(7)
 
     print("Prebieha vizualizácia...")
-    update_canvas_fill_all()
+    update_canvas()
 
     print("Experiment 3 trval " + str(time.time() - start_time) + " sekúnd.")
     print()
@@ -205,6 +208,8 @@ def experiment3():
 
 def experiment4():
     start_time = time.time()
+
+    print("EXPERIMENT 4:")
 
     # reset point lists if there is more points than initial points
     if len(points) > 20:
@@ -214,7 +219,7 @@ def experiment4():
     generate_points(15)
 
     print("Prebieha vizualizácia...")
-    update_canvas_fill_all()
+    update_canvas()
 
     print("Experiment 4 trval " + str(time.time() - start_time) + " sekúnd.")
     print()
@@ -353,6 +358,7 @@ def classify(x, y, k):
         max_colors.append("purple")
 
     # get random color from prevailing colors
+    random.seed(datetime.now())
     random_index = random.randrange(len(max_colors))
     color = max_colors[random_index]
 
